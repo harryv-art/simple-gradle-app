@@ -5,6 +5,12 @@ pipeline {
     // You might specify a label like 'agent { label 'my-gradle-agent' }' if you have specific build agents.
     agent any
 
+    // Use the 'tools' block to define which tools should be made available on the agent.
+    // The name 'Gradle_9.1' must match the name you configured in Jenkins Global Tool Configuration.
+    tools {
+        gradle 'Gradle_9.1' // IMPORTANT: Replace 'Gradle_9.1' with the name you set in Jenkins
+    }
+
     // The 'stages' block defines a series of logical steps in your CI/CD process.
     stages {
         // Stage for cloning the repository, though Jenkins usually handles this automatically for Pipeline from SCM.
@@ -20,9 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Use the 'sh' (shell) step to execute shell commands.
-                // 'gradle clean build' cleans previous build outputs and then builds the project.
-                // If Gradle is not on the system's PATH, you might need to use './gradlew clean build'
-                // if you include the Gradle Wrapper in your repository.
+                // Since Gradle is now defined in the 'tools' section, Jenkins will add it to the PATH.
                 sh 'gradle clean build'
             }
         }
@@ -52,6 +56,7 @@ pipeline {
     post {
         always {
             // 'cleanWs' cleans up the workspace on the agent after the build.
+            // Ensure Workspace Cleanup Plugin is installed.
             cleanWs()
         }
         success {
