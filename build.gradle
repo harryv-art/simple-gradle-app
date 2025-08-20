@@ -1,0 +1,31 @@
+plugins {
+    id 'java' // Apply the Java plugin for Java compilation
+    id 'application' // Apply the Application plugin to create an executable JAR
+}
+
+group 'com.example' // Define the group ID for your project
+version '1.0-SNAPSHOT' // Define the version of your project
+
+repositories {
+    mavenCentral() // Declare the Maven Central repository for dependencies
+}
+
+dependencies {
+    // Add any dependencies here. For this simple project, none are needed.
+    // Example: testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    // testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+}
+
+application {
+    mainClass = 'com.example.helloworld.HelloWorld' // Specify the main class for the application plugin
+}
+
+// Task to create a single executable JAR
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.example.helloworld.HelloWorld'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
